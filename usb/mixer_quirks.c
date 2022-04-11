@@ -134,6 +134,68 @@ static int snd_create_std_mono_table(struct usb_mixer_interface *mixer,
 	return 0;
 }
 
+static int snd_audient_evo8_create_mix(struct usb_mixer_interface *mixer,
+	unsigned int idx_offs,
+	const char *name)
+{
+	struct usb_mixer_elem_info *cval;
+	struct snd_kcontrol *kctl;
+	const int id = 60; // UnitID of MIXER_UNIT
+
+	cval = kzalloc(sizeof(*cval), GFP_KERNEL);
+	if (!cval)
+		return -ENOMEM;
+
+	snd_usb_mixer_elem_init_std(&cval->head, mixer, id);
+	cval->val_type = USB_MIXER_S16;
+	cval->channels = 4;
+	cval->control = 1;
+	cval->cmask = 0x0f;
+	cval->idx_off = idx_offs;
+
+	/* Create control */
+	kctl = snd_ctl_new1(snd_usb_feature_unit_ctl, cval);
+	if (!kctl) {
+		kfree(cval);
+		return -ENOMEM;
+	}
+
+	/* Set name */
+	snprintf(kctl->id.name, sizeof(kctl->id.name), name);
+	kctl->private_free = snd_usb_mixer_elem_free;
+
+	/* Add control to mixer */
+	return snd_usb_mixer_add_control(&cval->head, kctl);
+}
+
+static int snd_audient_evo8_controls_create(struct usb_mixer_interface *mixer)
+{
+	int err;
+
+	if ((err = snd_audient_evo8_create_mix(mixer, -1, "Mic 1 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 3, "Mic 2 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 7, "Mic 3 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 11, "Mic 4 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 15, "DAW 1 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 19, "DAW 2 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 23, "DAW 3 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 27, "DAW 4 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 31, "Loopback 1 mix")) < 0)
+		return err;
+	if ((err = snd_audient_evo8_create_mix(mixer, 35, "Loopback 2 mix")) < 0)
+		return err;
+
+	return 0;
+}
+
 static int add_single_ctl_with_resume(struct usb_mixer_interface *mixer,
 				      int id,
 				      usb_mixer_elem_resume_func_t resume,
@@ -381,7 +443,7 @@ static int snd_audigy2nx_controls_create(struct usb_mixer_interface *mixer)
 			 mixer->chip->usb_id == USB_ID(0x041e, 0x3042) ||
 			 mixer->chip->usb_id == USB_ID(0x041e, 0x30df) ||
 			 mixer->chip->usb_id == USB_ID(0x041e, 0x3048)))
-			break; 
+			break;
 
 		knew = snd_audigy2nx_control;
 		knew.name = snd_audigy2nx_led_names[i];
@@ -2276,6 +2338,10 @@ int snd_usb_mixer_apply_create_quirk(struct usb_mixer_interface *mixer)
 	case USB_ID(0x2a39, 0x3fd3): /* RME ADI-2 DAC */
 	case USB_ID(0x2a39, 0x3fd4): /* RME */
 		err = snd_rme_controls_create(mixer);
+		break;
+
+	case USB_ID(0x2708, 0x0007): /* Audient EVO8 */
+		err = snd_audient_evo8_controls_create(mixer);
 		break;
 	}
 
