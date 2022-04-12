@@ -33,12 +33,27 @@ For each microphone input there is a control for each output. The routing is sho
 
 ![Real-time monitoring in alsamixer](https://github.com/soerenbnoergaard/snd-usb-audio-audient-evo8/blob/main/img/alsamixer_1.png?raw=true)
 
+The following commands sets the microphone gain and monitoring to 0 %:
+
+    amixer -q -c EVO8 sset 'Mic' 0%
+    amixer -q -c EVO8 sset 'Mic 1 mix' 0%
+    amixer -q -c EVO8 sset 'Mic 2 mix' 0%
+    amixer -q -c EVO8 sset 'Mic 3 mix' 0%
+    amixer -q -c EVO8 sset 'Mic 4 mix' 0%
+
 DAW output routing control
 --------------------------
 
 Like above, there is also a routing from each DAW output to each physical output. The routing below shows how to separate DAW output 1-4 into the physical output 1-4.
 
 ![DAW output routing in alsamixer](https://github.com/soerenbnoergaard/snd-usb-audio-audient-evo8/blob/main/img/alsamixer_2.png?raw=true)
+
+The following commands set up the DAW routing as shown above:
+
+    amixer -q -c EVO8 sset 'DAW 1 mix' front 100%,0%
+    amixer -q -c EVO8 sset 'DAW 2 mix' front 0%,100%
+    amixer -q -c EVO8 sset 'DAW 3 mix' rear 100%,0%
+    amixer -q -c EVO8 sset 'DAW 4 mix' rear 0%,100%
 
 Known limitations
 -----------------
