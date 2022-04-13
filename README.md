@@ -50,10 +50,10 @@ Like above, there is also a routing from each DAW output to each physical output
 
 The following commands set up the DAW routing as shown above:
 
-    amixer -q -c EVO8 sset 'DAW 1 mix' front 100%,0%
-    amixer -q -c EVO8 sset 'DAW 2 mix' front 0%,100%
-    amixer -q -c EVO8 sset 'DAW 3 mix' rear 100%,0%
-    amixer -q -c EVO8 sset 'DAW 4 mix' rear 0%,100%
+    amixer -q -c EVO8 sset 'DAW 1 mix' 100%,0%,0%,0%
+    amixer -q -c EVO8 sset 'DAW 2 mix' 0%,100%,0%,0%
+    amixer -q -c EVO8 sset 'DAW 3 mix' 100%,0%,0%,0%
+    amixer -q -c EVO8 sset 'DAW 4 mix' 0%,100%,0%,0%
 
 Known limitations
 -----------------
