@@ -41,6 +41,7 @@ The following commands sets the microphone gain and monitoring to 0 %:
     amixer -q -c EVO8 sset 'Mic 3 mix' 0%
     amixer -q -c EVO8 sset 'Mic 4 mix' 0%
 
+
 DAW output routing control
 --------------------------
 
@@ -54,6 +55,18 @@ The following commands set up the DAW routing as shown above:
     amixer -q -c EVO8 sset 'DAW 2 mix' 0%,100%,0%,0%
     amixer -q -c EVO8 sset 'DAW 3 mix' 0%,0%,100%,0%
     amixer -q -c EVO8 sset 'DAW 4 mix' 0%,0%,0%,100%
+
+**NOTE:** I have noticed that somethimes the output routing does not work right away on output 3L and 4R. This seems to be fixable like this:
+
+1. Go to `alsamixer`
+2. Find `DAW 3 mix`
+3. Turn the left channel volume down one step by typing `z´
+4. Turn the left channel volume up one step by typing `q´
+5. Find `DAW 4 mix`
+6. Turn the right cnannel volume down one step by typing `c´
+7. Turn the right channel volume up one step by typing `e´
+
+I am sure this can be done with the `amixer` commands as well but I have not tried yet.
 
 Known limitations
 -----------------
